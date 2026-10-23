@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amadeus 手机端 · 新手上手</title>
+<meta name="description" content="Amadeus 手机端从零到能用：装包、填两把钥匙、开麦克风、让她动手。10 分钟，不需要电脑。">
+<meta property="og:title" content="Amadeus 手机端 · 十分钟上手">
+<meta property="og:description" content="装包、填两把钥匙、允许麦克风，她就能说话。全程不需要电脑。">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f6f6a'/%3E%3Cpath d='M9 22V10l7 8 7-8v12' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!--
+  已填：联系方式（交流群 QQ 1130679223 / B 站 道明寺可可亚official）。
+  发布：整份 index.html 上传到任意静态托管（GitHub Pages / Cloudflare Pages / VPS）即可。
+  改版本号时搜 v9.0.377，共 4 处（标题旁、下载卡、页脚、关于）。
+-->
+<style>
+  :root{
+    --bg:#fbfaf7; --card:#ffffff; --ink:#1c1e22; --ink-2:#5b5f66; --ink-3:#8b8f96;
+    --line:#e7e2d8; --accent:#2f6f6a; --accent-soft:#e8f1ef; --warn:#a8642a; --warn-soft:#fdf1e5;
+    --code:#f3f0e9; --radius:14px; --shadow:0 1px 2px rgba(28,30,34,.05),0 8px 24px rgba(28,30,34,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14161a; --card:#1b1e23; --ink:#eceef1; --ink-2:#a9aeb6; --ink-3:#7d838c;
+           --line:#2a2e35; --accent:#6fc3b8; --accent-soft:#1f2f2d; --warn:#e0a06a; --warn-soft:#2e2419;
+           --code:#20242a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); line-height:1.75; font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+
+  /* ── 顶部 ── */
+  header.hero{padding:56px 0 28px}
+  .kicker{color:var(--ink-3); font-size:13px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 10px}
+  h1{font-size:clamp(24px,6.1vw,38px); line-height:1.28; margin:0 0 14px; letter-spacing:-.01em}
+  .lede{font-size:17px; color:var(--ink-2); margin:0 0 24px; max-width:56ch}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px}
+  .chip{font-size:13px; color:var(--ink-2); background:var(--card); border:1px solid var(--line);
+        padding:5px 11px; border-radius:999px; white-space:nowrap}
+  .cta{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:12px;
+       background:var(--accent); color:#fff; border:none; font-size:16px; font-weight:600; cursor:pointer;
+       box-shadow:var(--shadow); text-decoration:none}
+  .btn:hover{filter:brightness(1.05); border:none}
+  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line); box-shadow:none; font-weight:500}
+  .btn.ghost:hover{background:var(--card)}
+  .tiny{font-size:13px; color:var(--ink-3); margin:14px 0 0}
+
+  /* ── 群号：最显眼的一块 ── */
+  .qgroup{display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin:22px 0 0;
+          padding:16px 18px; border-radius:14px; background:var(--accent-soft);
+          border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line))}
+  .qgroup .qk{font-size:13px; letter-spacing:.08em; color:var(--accent); font-weight:700}
+  .qgroup .qn{font-size:clamp(28px,7vw,40px); font-weight:800; letter-spacing:.02em;
+              font-variant-numeric:tabular-nums; color:var(--ink); line-height:1.05}
+  .qgroup .qh{font-size:14px; color:var(--ink-2)}
+  .qgroup .qbtn{margin-left:auto}
+  @media (max-width:600px){ .qgroup .qbtn{margin-left:0; width:100%} }
+
+  /* ── 目录 ── */
+  nav.toc{position:sticky; top:0; z-index:30; backdrop-filter:saturate(1.6) blur(10px);
+          background:color-mix(in srgb,var(--bg) 86%,transparent); border-bottom:1px solid var(--line)}
+  nav.toc .wrap{display:flex; gap:2px; overflow-x:auto; padding:9px 20px; scrollbar-width:none;
+                -webkit-mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%);
+                mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%)}
+  nav.toc .wrap::-webkit-scrollbar{display:none}
+  nav.toc a{flex:0 0 auto; font-size:14px; color:var(--ink-2); padding:6px 11px; border-radius:8px; border:none; white-space:nowrap}
+  nav.toc a:hover{background:var(--card); color:var(--ink)}
+  nav.toc a.on{color:var(--ink); background:var(--accent-soft); font-weight:600}
+
+  /* ── 区块 ── */
+  section{padding:36px 0 8px; scroll-margin-top:64px}
+  h2{font-size:22px; margin:0 0 6px; letter-spacing:-.01em; display:flex; align-items:center; gap:10px}
+  h2 .n{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; flex:0 0 26px;
+        border-radius:8px; background:var(--accent-soft); color:var(--accent); font-size:14px; font-weight:700}
+  .sub{color:var(--ink-2); margin:0 0 18px; font-size:15px}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); margin:0 0 14px}
+  .card h3{margin:0 0 8px; font-size:17px}
+  .card p:last-child{margin-bottom:0}
+  .card ul, .card ol{margin:8px 0 0; padding-left:20px}
+  .card li{margin:5px 0}
+  .grid{display:grid; gap:14px}
+  @media (min-width:640px){ .grid.two{grid-template-columns:1fr 1fr} }
+
+  .step{display:flex; gap:14px; align-items:flex-start}
+  .step .num{flex:0 0 30px; width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff;
+             display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; margin-top:2px}
+  .step .body{min-width:0; flex:1}
+
+  code{background:var(--code); padding:.14em .42em; border-radius:6px; font-size:.92em;
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+  .copybox{display:flex; align-items:center; gap:8px; background:var(--code); border-radius:10px;
+           padding:9px 10px 9px 12px; margin:8px 0; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+           font-size:14px; overflow-x:auto}
+  .copybox span{flex:1; white-space:nowrap; min-width:0; overflow-x:auto}
+  .copybox button{flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink-2);
+                  border-radius:7px; padding:4px 9px; font-size:12px; cursor:pointer; font-family:inherit}
+  .copybox button:hover{color:var(--ink)}
+
+  .note{border-left:3px solid var(--warn); background:var(--warn-soft); border-radius:0 10px 10px 0;
+        padding:12px 16px; margin:14px 0; font-size:15px; color:var(--ink)}
+  .note b{color:var(--warn)}
+  .ok{border-left-color:var(--accent); background:var(--accent-soft)}
+  .ok b{color:var(--accent)}
+
+  table{width:100%; border-collapse:collapse; font-size:15px; display:block; overflow-x:auto; white-space:nowrap}
+  table thead th{text-align:left; font-size:13px; color:var(--ink-3); font-weight:600; padding:8px 12px 8px 0; border-bottom:1px solid var(--line)}
+  table td{padding:10px 12px 10px 0; border-bottom:1px solid var(--line); vertical-align:top; white-space:normal}
+  table tr:last-child td{border-bottom:none}
+  dl.kv{display:grid; grid-template-columns:auto 1fr; gap:9px 16px; font-size:14.5px; margin:10px 0 0}
+  dl.kv dt{color:var(--ink-3); white-space:nowrap}
+  dl.kv dd{margin:0; min-width:0}
+  .copybox.wrap span{white-space:normal; word-break:break-all; overflow-x:visible; font-size:12.5px; line-height:1.6}
+
+  details{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:0 18px; margin:0 0 10px}
+  details[open]{padding-bottom:6px}
+  summary{cursor:pointer; padding:15px 0; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+"; color:var(--ink-3); font-weight:400; font-size:18px; line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{margin:0 0 12px; color:var(--ink-2)}
+
+  footer{margin-top:44px; padding:26px 0 60px; border-top:1px solid var(--line); color:var(--ink-3); font-size:13px}
+  footer p{margin:6px 0}
+  .progress{position:fixed; left:0; top:0; height:2px; background:var(--accent); width:0; z-index:40; transition:width .1s linear}
+  @media print{
+    nav.toc,.progress,.cta,.tiny{display:none}
+    body{background:#fff; color:#000; font-size:10.5pt; line-height:1.6}
+    .wrap{max-width:none; padding:0}
+    section{padding:18px 0 4px}
+    h2{margin-top:10px}
+    .card,.note,details,dl.kv{box-shadow:none; border:1px solid #ccc; break-inside:avoid}
+    h1,h2,h3,summary{break-after:avoid}
+    a{color:#000; border:none; text-decoration:none}
+    .copybox{border:1px solid #ddd}
+    .copybox button{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Amadeus · 手机端</p>
+    <h1>十分钟，让她在你手机上说话</h1>
+    <p class="lede">不用电脑也能用。装包、填两把钥匙、允许麦克风——她就能聊天、记事、出声。想让她帮你点屏幕，再多开一个开关。</p>
+    <div class="meta">
+      <span class="chip">v9.0.377</span>
+      <span class="chip">安卓 8.0+ / arm64</span>
+      <span class="chip">约 10 分钟</span>
+    </div>
+    <div class="cta">
+      <a class="btn" href="#step1">从第一步开始</a>
+      <a class="btn ghost" href="#faq">遇到问题</a>
+    </div>
+    <div class="qgroup">
+      <div>
+        <div class="qk">QQ 交流群 · 安装包群文件里取</div>
+        <div class="qn" id="qnum">1130679223</div>
+        <div class="qh">卡住了、钥匙报错、想让她动手没反应——进群问，比猜快。</div>
+      </div>
+      <button class="btn qbtn" type="button" data-copy="#qnum">复制群号</button>
+    </div>
+    <p class="tiny">本页只讲怎么把它用起来，不含任何安装包与密钥。</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="目录">
+  <div class="wrap">
+    <a href="#prepare">准备</a>
+    <a href="#install">装包</a>
+    <a href="#step1">三步进主页</a>
+    <a href="#home">怎么用</a>
+    <a href="#ops">让她动手</a>
+    <a href="#pc">连电脑</a>
+    <a href="#faq">常见问题</a>
+    <a href="#about">关于</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- 1 准备 -->
+  <section id="prepare">
+    <h2><span class="n">1</span>先准备两样东西</h2>
+    <p class="sub">一部能装 App 的手机，和一把大模型钥匙。语音钥匙可选。</p>
+
+    <div class="grid two">
+      <div class="card">
+        <h3>① 一部安卓手机</h3>
+        <p>安卓 8.0 以上，必须是 arm64（2020 年后的机器基本都是）。</p>
+        <p>包 897MB，装完占约 0.9GB；第一次让她动手机还会再解约 1.1GB 的运行时——<b>留 3GB 空闲比较稳</b>。</p>
+      </div>
+      <div class="card">
+        <h3>② 两把钥匙</h3>
+        <p><b>大模型钥匙（必须）</b>：决定她用哪个脑子。去 DeepSeek 官网 <code>platform.deepseek.com</code> 注册，在「API Keys」建一个，复制出来的 <code>sk-…</code> 一整串。</p>
+        <p><b>语音钥匙（想要声音才要）</b>：Fish Audio（fish.audio）注册后建一把；或阿里云百炼的 CosyVoice 钥匙。</p>
+      </div>
+    </div>
+
+    <div class="note"><b>别把钥匙发群里。</b> 它等同手机号加密码，别人拿到能用你的额度。费用是你自己账号的事，几块钱能用很久。</div>
+  </section>
+
+  <!-- 2 装包 -->
+  <section id="install">
+    <h2><span class="n">2</span>把包装上</h2>
+    <p class="sub">安装包在群里（QQ <b>1130679223</b>），拿到后三步。</p>
+    <div class="card">
+      <ol>
+        <li>把 <code>.apk</code> 传到手机上（QQ 传或网盘下）。</li>
+        <li>点开安装。第一次会提示「未知来源应用」，按提示允许一次。</li>
+        <li>如果提示 <b>「签名不一致」</b>：手机里还装着别的来源的旧版，先卸载旧的再装——卸载会清空旧聊天记录。</li>
+      </ol>
+    </div>
+    <div class="note ok"><b>装完先别急着开。</b> 第一次启动要解模型，最好插着电、连着 Wi-Fi，别切后台。</div>
+  </section>
+
+  <!-- 3 三步 -->
+  <section id="step1">
+    <h2><span class="n">3</span>第一次打开：只做三步</h2>
+    <p class="sub">打开后停在「连接电脑」页——不用连电脑，看下面那颗按钮。</p>
+
+    <div class="card">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="body">
+          <h3>装人格</h3>
+          <p>点「<b>装人格，独立使用</b>」。人格装进手机里，默认日语，想换中文在设置 →「本机人格」里改。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">
+        <div class="num">2</div>
+        <div class="body">
+          <h3>填大模型钥匙</h3>
+          <p>会自动跳到这一页。三项一起填，然后保存：</p>
+          <ul>
+            <li><b>服务地址</b>：填到 <code>/v1</code> 为止</li>
+            <li><b>模型名</b>：照所选服务的文档写</li>
+            <li><b>钥匙</b>：粘贴那一整串 <code>sk-…</code></li>
+          </ul>
+          <p style="margin-top:12px">地址照抄下面这一行即可（DeepSeek）：</p>
+          <div class="copybox"><span>https://api.deepseek.com/v1</span><button type="button" data-copy>复制</button></div>
+          <p>模型名填 <code>deepseek-chat</code>。任何「OpenAI 兼容」的服务都能用（智谱 / Moonshot / 通义 / OpenAI），Anthropic、Gemini 的原生接口接不上。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="step">
+        <div class="num">3</div>
+        <div class="body">
+          <h3>填语音钥匙（可选）</h3>
+          <p>想让她出声就填，不填也能用，只是没声音。二选一，填完保存：</p>
+          <p style="margin:10px 0 2px"><b>Fish</b>：地址、模型照抄</p>
+          <div class="copybox"><span>wss://api.fish.audio/v1/tts/live</span><button type="button" data-copy>复制</button></div>
+          <div class="copybox"><span>s2.1-pro-free</span><button type="button" data-copy>复制</button></div>
+          <p style="margin:10px 0 2px"><b>千问</b>：模型 <code>cosyvoice-v3.5-flash</code>，钥匙填你的，音色填 voice_id 编号。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">顶部写着 <b>「待配对」是正常的</b>，那只表示没连电脑，不影响使用。</div>
+  </section>
+
+  <!-- 4 主页 -->
+  <section id="home">
+    <h2><span class="n">4</span>主页怎么用</h2>
+    <p class="sub">三样东西：输入框、麦克风、加号。</p>
+    <div class="grid two">
+      <div class="card">
+        <h3>打字</h3>
+        <p>底部输入框，回车发送。</p>
+        <h3 style="margin-top:16px">说话</h3>
+        <p>按住左下角麦克风。语音在本机识别，录音不上传。她说话时你直接开口就能插话。</p>
+      </div>
+      <div class="card">
+        <h3>加号（右下角）</h3>
+        <p>相册、屏幕共享、情绪、悬浮桌宠；第二页是「这台手机」——陀螺仪视角、主动搭话挡位。</p>
+        <h3 style="margin-top:16px">右上角</h3>
+        <p>设置。换人格、换钥匙、改字大小、更新版本都在里面。</p>
+      </div>
+    </div>
+    <p class="tiny">第一次说话会弹麦克风权限，点「允许」；摄像头同理。</p>
+  </section>
+
+  <!-- 5 动手 -->
+  <section id="ops">
+    <h2><span class="n">5</span>想让她帮你操作手机</h2>
+    <p class="sub">可选，但很好用：点屏幕、打字、开应用、截屏、锁屏。</p>
+    <div class="card">
+      <p>先开一个系统开关：</p>
+      <p style="margin:10px 0"><b>设置 → 无障碍 → 已下载的应用 → Amadeus → 打开</b></p>
+      <p class="tiny" style="margin-top:0">MIUI / 澎湃可能在「设置 → 无障碍 → 已下载的应用」里；有的系统在这一页还要再点一次「允许」。</p>
+      <p style="margin-top:14px">开好之后，直接说「帮我打开设置把亮度调低」这种话，她会自己动手，做完回你一句。</p>
+      <ul>
+        <li>没开也能正常聊天，只是她会说「无障碍服务没开，这轮我点不了屏幕」。</li>
+        <li>一轮最多 25 个动作、3 分钟，到点自己收场。</li>
+        <li>中途想停，说「停下」。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 电脑 -->
+  <section id="pc">
+    <h2><span class="n">6</span>连电脑（可选）</h2>
+    <p class="sub">不连也完全能用，先跑几天再连也行。</p>
+    <div class="card">
+      <p>电脑上启动 Amadeus 桌面端，它会显示一个地址和一个配对码。手机进「连接电脑」页，填进去、连上。</p>
+      <p style="margin-bottom:0">之后她能看电脑屏幕、读写电脑文件、两边共用同一份记忆。</p>
+    </div>
+  </section>
+
+  <!-- 7 常见问题 -->
+  <section id="faq">
+    <h2><span class="n">7</span>常见问题</h2>
+    <p class="sub">点开看答案。</p>
+
+    <details><summary>启动动画出现后，闪退回桌面</summary>
+      <p>多半是第一次启动解模型时被打断，或内存不够。清掉后台再开一次；还是不行就「设置 → 应用 → Amadeus → 存储 → 清除数据」重来。反复这样，把「设置 → 崩溃与脚本错误」里的内容复制给作者。</p>
+    </details>
+    <details><summary>「钥匙被拒了（401）」</summary>
+      <p>钥匙无效或没复制全。重新复制整串，注意别带多余空格；填完点保存。</p>
+    </details>
+    <details><summary>她没有声音 / 「还差一把声音的钥匙」</summary>
+      <p>语音钥匙没填。去设置 →「语音的钥匙（Fish / 千问）」填好保存，状态行会显示「已保存」或具体原因。</p>
+    </details>
+    <details><summary>麦克风、摄像头点不开</summary>
+      <p>手机设置 → 应用 → Amadeus → 权限，把麦克风、相机打开。</p>
+    </details>
+    <details><summary>手机发烫、动画卡</summary>
+      <p>设置 →「画面档位」→ 省电。省电档会自动关掉陀螺仪视角。</p>
+    </details>
+    <details><summary>她老是不理我</summary>
+      <p>看设置里的「勿扰模式」和「睡眠时段」——开着的话她不会主动开口。</p>
+    </details>
+    <details><summary>想更新版本，一定要数据线吗</summary>
+      <p>不用。设置 →「更新我自己」，按提示换掉 App。</p>
+    </details>
+    <details><summary>包为什么这么大</summary>
+      <p>本机语音识别、本机情绪模型、检索模型、立绘，还有让她动手机的整套运行时都在包里，不是缓存。第一次动手机时才会解开那 1.1GB。</p>
+    </details>
+  </section>
+
+  <!-- 8 关于 -->
+  <section id="about">
+    <h2><span class="n">8</span>关于这个包</h2>
+    <div class="card">
+      <p>含人格（日中英，默认日语）、本机语音识别、本机情绪模型、检索模型、立绘表情，以及干活用的运行时。</p>
+      <p><b>不含</b>任何人的聊天记录、头像、私人地址与密钥。钥匙只存在你手机里；卸载＝清空这台手机上的记忆。</p>
+      <dl class="kv">
+        <dt>版本</dt><dd>v9.0.377</dd>
+        <dt>系统</dt><dd>安卓 8.0+，arm64</dd>
+        <dt>安装包</dt><dd>在群里，或找作者要</dd>
+        <dt>交流群</dt><dd>QQ 1130679223</dd>
+        <dt>作者</dt><dd>B 站 · 道明寺可可亚official</dd>
+      </dl>
+    </div>
+    <p class="tiny" style="margin-top:16px">页面里没有任何安装包，也没有任何人的钥匙；它只是一份说明。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Amadeus 手机端 v9.0.377 · 新手上手</p>
+    <p>交流群：QQ <b>1130679223</b>（安装包在群文件里）· 作者：B 站 道明寺可可亚official</p>
+    <p>遇到问题先看「设置 → 崩溃与脚本错误」，那里的原文比描述有用得多。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // 复制按钮
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var sel = btn.getAttribute('data-copy');
+      var src = sel ? document.querySelector(sel) : btn.previousElementSibling;
+      if (!src) return;
+      var text = src.textContent.trim();
+      var label = btn.getAttribute('data-label') || (sel ? '复制群号' : '复制');
+      var done = function(){ btn.textContent='已复制'; setTimeout(function(){btn.textContent=label;},1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); }catch(e){}
+        document.body.removeChild(ta); done();
+      }
+    });
+  });
+
+  // 目录高亮 + 顶部进度条
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  var prog  = document.getElementById('prog');
+  function onScroll(){
+    var y = window.scrollY || document.documentElement.scrollTop;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? (y / h * 100) : 0) + '%';
+    var idx = -1;
+    for (var i=0;i<secs.length;i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a,i){ a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>
